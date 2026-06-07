@@ -51,6 +51,9 @@ def convert(taco_dir: str, output_dir: str) -> None:
 
     ann_path = taco_dir / "annotations" / "annotations.json"
     if not ann_path.exists():
+        # TACO repo直接clone時annotations.json在data/根目錄，不在annotations/子目錄
+        ann_path = taco_dir / "annotations.json"
+    if not ann_path.exists():
         raise FileNotFoundError(f"TACO annotations not found: {ann_path}")
 
     with open(ann_path, encoding="utf-8") as f:
