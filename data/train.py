@@ -8,7 +8,7 @@ from ultralytics import YOLO
 
 
 def train(data_yaml: str, epochs: int, imgsz: int, batch: int, device: str) -> None:
-    model = YOLO("yolo26s-seg.pt")  # YOLO26 small-seg, auto-downloaded by ultralytics
+    model = YOLO("yolo11s.pt")  # YOLO11s detection, auto-downloaded by ultralytics
 
     results = model.train(
         data=data_yaml,

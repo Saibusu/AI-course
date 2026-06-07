@@ -34,7 +34,7 @@ LED_COLORS = {
 # ── Model settings ───────────────────────────────────────
 MODEL_ENGINE  = os.path.join(os.path.dirname(__file__), "..", "models", "waste_sorter_fp16.engine")
 MODEL_PT      = os.path.join(os.path.dirname(__file__), "..", "models", "best.pt")
-MODEL_PRETRAIN = "yolo26s-seg.pt"  # base model for fine-tuning (auto-downloaded by ultralytics)
+MODEL_PRETRAIN = "yolo11s.pt"  # base model for fine-tuning (auto-downloaded by ultralytics)
 INPUT_SIZE   = 416
 CONF_THRESH  = 0.45
 
