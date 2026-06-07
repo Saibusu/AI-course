@@ -207,9 +207,10 @@ marimo/_lsp/
 __marimo__/
 
 # Project-specific
-models/*.pt
-models/*.engine
-models/*.onnx
+*.pt
+*.engine
+*.onnx
+models/
 runs/
 data/TACO/
 data/dataset/
