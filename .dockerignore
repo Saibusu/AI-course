@@ -1,0 +1,39 @@
+# .dockerignore — 排除不需要進入映像的檔案
+
+# Python 暫存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 虛擬環境
+venv/
+.venv/
+env/
+
+# 模型檔案（透過 volume 掛載，不 COPY 進映像）
+# 注意：.pt 和 .engine 可能很大（100MB+）
+models/*.pt
+models/*.engine
+models/*.onnx
+
+# 辨識記錄（透過 volume 掛載）
+logs/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 測試資料
+dataset/
+runs/

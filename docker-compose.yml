@@ -1,0 +1,54 @@
+# docker-compose.yml — PC 開發模式
+#
+# 使用方式：
+#   docker-compose up --build          # 啟動（含攝影機 + 預覽視窗）
+#   docker-compose up --build -d       # 背景執行（無頭模式）
+#   docker-compose run app bash        # 進入容器 shell
+#
+# X11 預覽視窗設定（Linux）：
+#   xhost +local:docker   # 允許容器存取 X11（執行一次即可）
+#
+# Mac / Windows：
+#   需安裝 XQuartz（Mac）或 VcXsrv（Windows）
+#   並設定 DISPLAY 環境變數
+
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    image: waste-sorting:dev
+    container_name: waste-sorting-dev
+
+    environment:
+      # 執行環境
+      - ENV=dev
+      - SHOW_PREVIEW=true
+      - CONF_THRESH=0.60
+      - LED_DURATION=5.0
+      # USB 攝影機索引（通常為 0，若有多個攝影機可改 1、2…）
+      - CAMERA_ID=0
+      # X11 顯示（Linux 預覽視窗用）
+      - DISPLAY=${DISPLAY:-:0}
+
+    volumes:
+      # 程式碼熱重載（開發期間修改程式不需重建映像）
+      - .:/app
+      # 模型目錄（放入 .pt 檔案後容器內即可存取）
+      - ./models:/app/models
+      # 辨識記錄持久化
+      - ./logs:/app/logs
+      # X11 socket（Linux 預覽視窗）
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
+    devices:
+      # USB 攝影機（視系統情況可能是 video1、video2…）
+      - /dev/video0:/dev/video0
+
+    # 防止 X11 彩色輸出編碼問題
+    tty: true
+    stdin_open: true
+
+    restart: "no"

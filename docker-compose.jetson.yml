@@ -1,0 +1,56 @@
+# docker-compose.jetson.yml — Jetson Orin Nano 正式部署
+#
+# 使用方式（在 Jetson 上執行）：
+#   docker-compose -f docker-compose.jetson.yml up --build
+#   docker-compose -f docker-compose.jetson.yml up -d    # 背景常駐
+#   docker-compose -f docker-compose.jetson.yml logs -f  # 查看 log
+#
+# 前置條件：
+#   1. 已建立 TensorRT engine：python3 export_tensorrt.py
+#   2. models/waste_classifier.engine 存在
+#   3. /dev/video0（USB）或 CSI 攝影機已連接
+
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.jetson
+    image: waste-sorting:jetson
+    container_name: waste-sorting-jetson
+
+    # Jetson GPU 執行時期（必要）
+    runtime: nvidia
+
+    environment:
+      - ENV=jetson
+      - SHOW_PREVIEW=false          # Jetson 部署通常無頭執行
+      - CONF_THRESH=0.60
+      - LED_DURATION=5.0
+      - CAMERA_ID=0
+      - CAMERA_FLIP=0               # 攝影機倒裝時改為 2
+
+    volumes:
+      - ./models:/app/models        # TensorRT engine 掛載
+      - ./logs:/app/logs            # 辨識記錄持久化
+
+    devices:
+      # GPIO 裝置（Jetson Orin Nano）
+      - /dev/gpiochip0:/dev/gpiochip0
+      - /dev/gpiochip1:/dev/gpiochip1
+      # USB 攝影機（若使用 CSI 則可移除）
+      - /dev/video0:/dev/video0
+
+    # GPIO 需要特權模式或指定 capabilities
+    privileged: true
+
+    # 自動重啟（系統開機後自動啟動）
+    restart: unless-stopped
+
+    # 健康檢查（每 30 秒確認容器仍在執行）
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

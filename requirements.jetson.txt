@@ -1,0 +1,8 @@
+# requirements.jetson.txt — Jetson Orin Nano 部署環境
+# 注意：PyTorch / TensorRT / OpenCV 已包含在 L4T 基底映像中，不需重複安裝
+
+# YOLO 框架（YOLO26 需要最新版；安裝時若 torch 已滿足版本要求，pip 不會重新安裝）
+ultralytics>=8.3.0
+
+# 數值計算（L4T 映像可能未包含，視版本而定）
+numpy>=1.24.0

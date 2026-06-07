@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.DS_Store
+.pytest_cache/
+
+# 大型二進位檔 (不推 dataset 圖片)
+dataset/train/
+dataset/valid/
+dataset/test/
+
+# fiftyone 快取
+*.fiftyone/
+
+# TensorRT engine (Jetson 本地產生)
+models/*.engine
+models/*.onnx
+
+# log
+logs/
+
+# 暫存
+*.tmp
+*.bak

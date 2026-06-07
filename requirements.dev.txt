@@ -1,0 +1,20 @@
+# requirements.dev.txt — PC 開發環境
+# 使用 CPU 推論，不需要 CUDA
+
+# YOLO 推論（YOLO26 需要最新版 ultralytics）
+ultralytics>=8.3.0
+
+# 影像處理
+opencv-python>=4.9.0
+
+# 數值計算
+numpy>=1.24.0
+
+# Roboflow 資料集下載工具
+roboflow>=1.1.0
+
+# 訓練資料處理
+PyYAML>=6.0
+
+# 測試框架
+pytest>=7.4.0

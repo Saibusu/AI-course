@@ -1,0 +1,43 @@
+# ============================================================
+# Dockerfile.dev — PC 開發 / 測試環境
+# 平台：x86_64 Linux / Mac（Docker Desktop）
+# 特點：
+#   - MockGPIO（不需要硬體）
+#   - USB 攝影機（/dev/video0）
+#   - CPU 推論（ultralytics yolov8n.pt）
+#   - X11 視窗（預覽畫面）
+# ============================================================
+
+FROM python:3.10-slim
+
+# ── 系統套件 ───────────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        # OpenCV 執行期依賴
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender1 \
+        libgl1-mesa-glx \
+        # 預覽視窗（X11 轉發）
+        libx11-6 \
+        # 除錯工具
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Python 套件 ────────────────────────────────────────────
+COPY requirements.dev.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.dev.txt
+
+# ── 應用程式 ───────────────────────────────────────────────
+WORKDIR /app
+COPY . .
+
+RUN mkdir -p models logs
+
+# ── 環境變數預設值 ─────────────────────────────────────────
+ENV ENV=dev \
+    SHOW_PREVIEW=true \
+    CONF_THRESH=0.60 \
+    PYTHONUNBUFFERED=1
+
+ENTRYPOINT ["python", "main.py"]

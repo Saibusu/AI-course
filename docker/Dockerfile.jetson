@@ -1,0 +1,58 @@
+# ============================================================
+# Dockerfile.jetson — Jetson Orin Nano 正式部署
+# 基底映像：NVIDIA L4T（JetPack 6.x / r36）
+#
+# 使用方式（在 Jetson 上執行）：
+#   docker build -f docker/Dockerfile.jetson -t waste-sorting:jetson .
+#   docker-compose -f docker-compose.jetson.yml up
+#
+# 前置條件：
+#   - Jetson 已安裝 JetPack 6.x（L4T r36.x）
+#   - 已執行 TensorRT 轉換，models/ 下有 .engine 檔案
+#   - sudo docker （或加入 docker 群組）
+# ============================================================
+
+# L4T r36 = JetPack 6.x，對應 Orin Nano
+# 包含：CUDA 12.x、cuDNN 8.x、TensorRT 8.6+、Python 3.10
+FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3
+
+# ── 系統套件 ───────────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3-pip \
+        python3-dev \
+        # OpenCV 執行期依賴（L4T 已內建 OpenCV，僅補齊缺少的 runtime lib）
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        # GStreamer（CSI-2 攝影機；nvarguscamerasrc 已在 L4T 內）
+        gstreamer1.0-tools \
+        gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad \
+        libgstreamer1.0-dev \
+        # 除錯工具
+        nano \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Python 套件 ────────────────────────────────────────────
+COPY requirements.jetson.txt /tmp/
+RUN pip3 install --no-cache-dir -r /tmp/requirements.jetson.txt
+
+# Jetson.GPIO（需要 sudo 群組 or privileged 模式）
+RUN pip3 install --no-cache-dir Jetson.GPIO
+
+# ── 應用程式 ───────────────────────────────────────────────
+WORKDIR /app
+COPY . .
+
+RUN mkdir -p models logs
+
+# ── 環境變數預設值 ─────────────────────────────────────────
+ENV ENV=jetson \
+    SHOW_PREVIEW=false \
+    CONF_THRESH=0.60 \
+    PYTHONUNBUFFERED=1
+
+# GPIO 群組設定（讓非 root 使用者可存取 GPIO）
+RUN groupadd -f gpio && usermod -aG gpio root
+
+ENTRYPOINT ["python3", "main.py", "--no-preview"]

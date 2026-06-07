@@ -1,0 +1,13 @@
+# data.yaml — 由 build_dataset.py 自動產生
+path: C:\Users\q1q2q\OneDrive\桌面\waste_sorting_system\dataset
+train: train/images
+val:   valid/images
+
+nc: 6
+names:
+  0: PET_Bottle            # 寶特瓶  → 綠燈
+  1: Aluminum_Can          # 鐵鋁罐  → 黃燈
+  2: Paper_Container       # 紙餐盒  → 藍燈
+  3: Plastic_Bag           # 塑膠袋  → 白燈
+  4: Foil_Package          # 鋁箔包  → 橘燈
+  5: General_Waste         # 一般垃圾  → 紅燈
