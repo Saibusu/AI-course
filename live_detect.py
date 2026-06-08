@@ -7,7 +7,10 @@ gi.require_version('GLib', '2.0')
 from gi.repository import Gst, GLib
 
 CLASS_NAMES = ['寶特瓶', '鐵鋁罐', '紙餐盒', '塑膠袋', '鋁箔包', '一般垃圾']
-MODEL_PT = os.path.expanduser('~/AI-course/models/best.pt')
+
+# Prefer ONNX (avoids PyTorch 2.5.0a0 C++ crash on Jetson); fall back to .pt
+_base = os.path.expanduser('~/AI-course/models/best')
+MODEL_PT = _base + '.onnx' if os.path.exists(_base + '.onnx') else _base + '.pt'
 
 Gst.init(None)
 
