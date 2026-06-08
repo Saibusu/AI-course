@@ -8,9 +8,9 @@ logger = logging.getLogger(__name__)
 try:
     import Jetson.GPIO as GPIO
     _GPIO_AVAILABLE = True
-except ImportError:
+except Exception:
     _GPIO_AVAILABLE = False
-    logger.warning("Jetson.GPIO not found — running in mock mode")
+    logger.warning("Jetson.GPIO unavailable — running in mock mode")
 
 
 class GPIOController:
