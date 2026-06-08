@@ -16,7 +16,7 @@ class WasteDetector:
 
         if os.path.exists(MODEL_ENGINE):
             logger.info("Loading TensorRT engine: %s", MODEL_ENGINE)
-            self.model = YOLO(MODEL_ENGINE, task="detect")
+            self.model = YOLO(MODEL_ENGINE)
         elif os.path.exists(MODEL_PT):
             logger.warning("TensorRT engine not found, falling back to PyTorch: %s", MODEL_PT)
             self.model = YOLO(MODEL_PT)
