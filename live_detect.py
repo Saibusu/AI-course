@@ -6,20 +6,19 @@ import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
-CLASS_NAMES = ['寶特瓶', '鐵鋁罐', '紙餐盒', '塑膠袋', '鋁箔包', '一般垃圾']
+CLASS_NAMES = ['寶特瓶', '鐵鋁罐', '紙餐盒', '塑膠袋', '一般垃圾']   # v4: 5-class
 # ASCII labels for cv2.putText (OpenCV cannot render CJK characters)
-CLASS_LABELS = ['Bottle', 'MetalCan', 'PaperBox', 'Bag', 'Carton', 'General']
+CLASS_LABELS = ['Bottle', 'MetalCan', 'PaperBox', 'Bag', 'General']
 COLORS = [
     (0, 255, 0),     # 寶特瓶   — green
     (0, 255, 255),   # 鐵鋁罐   — yellow
     (255, 0, 0),     # 紙餐盒   — blue
     (200, 200, 200), # 塑膠袋   — white
-    (0, 165, 255),   # 鋁箔包   — orange
     (0, 0, 255),     # 一般垃圾 — red
 ]
 
-MODEL_ONNX  = os.path.expanduser('~/AI-course/models/best.onnx')
-CONF_THRESH = 0.60   # raised from 0.45 to reduce false positives on background
+MODEL_ONNX  = os.path.expanduser('~/AI-course/models/best_v4.onnx')
+CONF_THRESH = 0.50
 NMS_THRESH  = 0.45
 INPUT_SIZE  = 416
 W, H        = 1280, 720
