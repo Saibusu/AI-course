@@ -10,6 +10,7 @@ import tensorrt as trt
 import pycuda.driver as cuda
 import pycuda.autoinit
 
+# 5-class system (v5) — 鋁箔包 removed, 塑膠袋 on Pin 21
 CLASS_NAMES  = ['寶特瓶', '鐵鋁罐', '紙餐盒', '塑膠袋', '一般垃圾']
 CLASS_LABELS = ['Bottle', 'MetalCan', 'PaperBox', 'Bag', 'General']
 COLORS = [
@@ -20,7 +21,7 @@ COLORS = [
     (0, 0, 255),     # General  — red
 ]
 
-ENGINE_PATH = os.path.expanduser('~/AI-course/models/best_v4.engine')
+ENGINE_PATH = os.path.expanduser('~/AI-course/models/best_v5.engine')
 CONF_THRESH = 0.45
 INPUT_SIZE  = 416
 W, H        = 1280, 720
@@ -98,7 +99,7 @@ def postprocess(output: np.ndarray, orig_w: int, orig_h: int):
 
 
 # ── Load TRT engine ──────────────────────────────────────────────────────────
-print("Loading TRT engine (yolo26m FP16)...")
+print("Loading TRT engine (yolo26m FP16, 5-class v5)...")
 model = TRTYolo(ENGINE_PATH)
 print("Engine loaded. Starting camera pipelines...")
 
