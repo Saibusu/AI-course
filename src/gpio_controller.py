@@ -80,6 +80,8 @@ class GPIOController:
             logger.error("GPIO output error pin %d: %s", pin, e)
 
     def _beep(self) -> None:
+        if BUZZER_PIN is None:
+            return
         if self.mock_mode:
             print(f"[MOCK GPIO] Buzzer Pin {BUZZER_PIN} HIGH for {BUZZER_DURATION}s")
             return

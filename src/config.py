@@ -15,11 +15,11 @@ GPIO_PINS = {
     0: 11,   # 寶特瓶  → Green
     1: 13,   # 鐵鋁罐  → Yellow
     2: 15,   # 紙餐盒  → Blue (100Ω resistor)
-    3: 19,   # 塑膠袋  → White (100Ω resistor)
+    # 3: 19,   # 塑膠袋  → White (暫時停用)
     4: 21,   # 鋁箔包  → Orange
     5: 23,   # 一般垃圾 → Red
 }
-BUZZER_PIN = 17
+BUZZER_PIN = None  # 暫時停用
 
 # ── LED colors for display reference ────────────────────
 LED_COLORS = {
