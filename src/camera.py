@@ -1,5 +1,5 @@
-import cv2
 import logging
+import numpy as np
 from src.config import CAMERA_WIDTH, CAMERA_HEIGHT
 
 logger = logging.getLogger(__name__)
@@ -8,22 +8,63 @@ _GST_PIPELINE = (
     "nvarguscamerasrc sensor-id=0 ! "
     "video/x-raw(memory:NVMM), width=(int){w}, height=(int){h}, framerate=(fraction)30/1 ! "
     "nvvidconv ! video/x-raw, format=(string)BGRx ! "
-    "videoconvert ! video/x-raw, format=(string)BGR ! appsink drop=1"
+    "videoconvert ! video/x-raw, format=(string)BGR ! "
+    "appsink name=sink max-buffers=1 drop=true sync=false"
 )
 
 
-def open_camera() -> cv2.VideoCapture:
-    gst = _GST_PIPELINE.format(w=CAMERA_WIDTH, h=CAMERA_HEIGHT)
-    cap = cv2.VideoCapture(gst, cv2.CAP_GSTREAMER)
+class _GstCapture:
+    """cv2.VideoCapture-compatible wrapper backed by GStreamer appsink."""
 
-    if not cap.isOpened():
-        logger.warning("GStreamer pipeline failed, falling back to /dev/video0")
-        cap = cv2.VideoCapture(0)
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+    def __init__(self, w: int, h: int):
+        import gi
+        gi.require_version("Gst", "1.0")
+        from gi.repository import Gst
+        import time
 
-    if not cap.isOpened():
-        raise RuntimeError("Cannot open camera. Check CSI connection or /dev/video0.")
+        Gst.init(None)
+        pipeline_str = _GST_PIPELINE.format(w=w, h=h)
+        self._pipeline = Gst.parse_launch(pipeline_str)
+        self._sink = self._pipeline.get_by_name("sink")
+        self._pipeline.set_state(Gst.State.PLAYING)
+        self._w = w
+        self._h = h
+        time.sleep(1.5)  # wait for pipeline to start
 
-    logger.info("Camera opened (%dx%d)", CAMERA_WIDTH, CAMERA_HEIGHT)
-    return cap
+    def isOpened(self) -> bool:
+        return self._pipeline is not None
+
+    def read(self):
+        from gi.repository import Gst
+        sample = self._sink.emit("pull-sample")
+        if sample is None:
+            return False, None
+        buf = sample.get_buffer()
+        ok, map_info = buf.map(Gst.MapFlags.READ)
+        if not ok:
+            return False, None
+        frame = np.frombuffer(map_info.data, dtype=np.uint8).reshape(
+            (self._h, self._w, 3)
+        ).copy()
+        buf.unmap(map_info)
+        return True, frame
+
+    def release(self):
+        if self._pipeline:
+            self._pipeline.set_state(
+                __import__("gi").repository.Gst.State.NULL
+            )
+            self._pipeline = None
+
+
+def open_camera() -> _GstCapture:
+    # Try GStreamer via gi (works even when OpenCV has no GStreamer support)
+    try:
+        cap = _GstCapture(CAMERA_WIDTH, CAMERA_HEIGHT)
+        logger.info("Camera opened via GStreamer gi (%dx%d)", CAMERA_WIDTH, CAMERA_HEIGHT)
+        return cap
+    except Exception as e:
+        raise RuntimeError(
+            f"Cannot open CSI camera via GStreamer: {e}\n"
+            "Check that nvarguscamerasrc is installed and CSI cable is connected."
+        ) from e

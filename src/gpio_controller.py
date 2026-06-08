@@ -21,12 +21,16 @@ class GPIOController:
         self._lock = threading.Lock()
 
         if not self.mock_mode:
-            GPIO.setmode(GPIO.BOARD)
-            for pin in GPIO_PINS.values():
-                GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
-            GPIO.setup(BUZZER_PIN, GPIO.OUT, initial=GPIO.LOW)
-            logger.info("GPIO initialized (Board mode)")
-        else:
+            try:
+                GPIO.setmode(GPIO.BOARD)
+                for pin in GPIO_PINS.values():
+                    GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+                GPIO.setup(BUZZER_PIN, GPIO.OUT, initial=GPIO.LOW)
+                logger.info("GPIO initialized (Board mode)")
+            except Exception as e:
+                logger.warning("GPIO setup failed (%s) — falling back to mock mode", e)
+                self.mock_mode = True
+        if self.mock_mode:
             logger.info("GPIO mock mode active")
 
     def trigger(self, class_id: int, duration: float = LED_DURATION) -> None:
