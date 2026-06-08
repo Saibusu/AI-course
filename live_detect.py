@@ -7,6 +7,8 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
 CLASS_NAMES = ['寶特瓶', '鐵鋁罐', '紙餐盒', '塑膠袋', '鋁箔包', '一般垃圾']
+# ASCII labels for cv2.putText (OpenCV cannot render CJK characters)
+CLASS_LABELS = ['Bottle', 'MetalCan', 'PaperBox', 'Bag', 'Carton', 'General']
 COLORS = [
     (0, 255, 0),     # 寶特瓶   — green
     (0, 255, 255),   # 鐵鋁罐   — yellow
@@ -17,7 +19,7 @@ COLORS = [
 ]
 
 MODEL_ONNX  = os.path.expanduser('~/AI-course/models/best.onnx')
-CONF_THRESH = 0.45
+CONF_THRESH = 0.60   # raised from 0.45 to reduce false positives on background
 NMS_THRESH  = 0.45
 INPUT_SIZE  = 416
 W, H        = 1280, 720
@@ -124,7 +126,7 @@ try:
                 for (x1, y1, x2, y2, conf, cls_id) in dets:
                     color = COLORS[cls_id] if cls_id < len(COLORS) else (255, 255, 255)
                     cv2.rectangle(display, (x1, y1), (x2, y2), color, 2)
-                    label = f"{CLASS_NAMES[cls_id]} {conf:.0%}"
+                    label = f"{CLASS_LABELS[cls_id]} {conf:.0%}"
                     cv2.putText(display, label, (x1, max(y1 - 8, 20)),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
                     print(f"\r偵測到: {CLASS_NAMES[cls_id]}  {conf:.1%}    ", end='', flush=True)
