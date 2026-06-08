@@ -1,5 +1,5 @@
 """
-YOLOE-11s fine-tune script
+YOLO26s-seg fine-tune script (ADR-001)
 Usage (PC/Colab): python data/train.py --data data/dataset/data.yaml --epochs 50
 """
 
@@ -8,10 +8,11 @@ from ultralytics import YOLO
 
 
 def train(data_yaml: str, epochs: int, imgsz: int, batch: int, device: str) -> None:
-    model = YOLO("yolo11s.pt")  # YOLO11s detection, auto-downloaded by ultralytics
+    model = YOLO("yolo26s-seg.pt")  # YOLO26s segmentation, auto-downloaded by ultralytics
 
     results = model.train(
         data=data_yaml,
+        task="segment",
         epochs=epochs,
         imgsz=imgsz,
         batch=batch,
@@ -33,7 +34,8 @@ def train(data_yaml: str, epochs: int, imgsz: int, batch: int, device: str) -> N
         hsv_v=0.4,
     )
     print(f"\nTraining done. Best weights: {results.save_dir}/weights/best.pt")
-    print(f"Val mAP@50: {results.results_dict.get('metrics/mAP50(B)', 'N/A'):.4f}")
+    print(f"Val mAP@50(B): {results.results_dict.get('metrics/mAP50(B)', 'N/A'):.4f}")
+    print(f"Val mAP@50(M): {results.results_dict.get('metrics/mAP50(M)', 'N/A'):.4f}")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-ultralytics>=8.3.0
+ultralytics>=8.4.0  # YOLO26 support requires 8.4+
 opencv-python-headless>=4.8.0,<4.9.0  # 4.9+ requires numpy>=2, incompatible with Jetson torch
 numpy>=1.24.0,<2.0.0                   # Jetson pre-installed torch requires numpy<2
 pytest>=7.4.0
