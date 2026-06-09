@@ -1,10 +1,13 @@
 # Copyright (c) 2026 李軒杰, 黃義鈞
 # Datung University — I4210 AI實務專題
 #
-# Build: docker buildx build --platform linux/arm64 -t ghcr.io/Saibusu/AI-course:latest .
-# Run:   docker run --rm --runtime nvidia -v ~/AI-course/models:/app/models:ro <image>
+# CI build (default):  docker buildx build --platform linux/arm64 -t ghcr.io/saibusu/ai-course:latest .
+# Jetson production:   docker build --build-arg BASE_IMAGE=nvcr.io/nvidia/l4t-pytorch:r36.2.0-pth2.1-py3 .
+# Run:                 docker run --rm --runtime nvidia -v ~/AI-course/models:/app/models:ro <image>
 
-FROM nvcr.io/nvidia/l4t-pytorch:r36.2.0-pth2.1-py3
+# Default base = slim Python for CI; override to l4t-pytorch on Jetson
+ARG BASE_IMAGE=python:3.10-slim-bookworm
+FROM ${BASE_IMAGE}
 
 WORKDIR /app
 
