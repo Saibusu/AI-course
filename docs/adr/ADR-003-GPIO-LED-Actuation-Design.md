@@ -1,6 +1,7 @@
 ---
 Title: GPIO LED Actuation Design for Waste Bin Guidance
 Date: 2026-05-30
+Updated: 2026-06-09
 Status: Accepted
 Accepted-by: Human (2026-05-30)
 ---
@@ -44,7 +45,7 @@ GPIO 腳位額定電流：40mA MAX per pin。
 **修正：藍色與白色 LED 使用 100Ω 限流電阻。**
 
 ### Fallback 行為
-- 辨識信心 < 0.45 → 點亮紅色（一般垃圾）Pin 23
+- 辨識信心 < 0.55 → 點亮紅色（一般垃圾 class 4）Pin 23
 - 所有 GPIO 操作皆有 try/except，例外時僅 log，不中斷主程式
 
 ## Consequences
@@ -54,7 +55,7 @@ GPIO 腳位額定電流：40mA MAX per pin。
 - 原生 GPIO API（Jetson.GPIO）與 RPi.GPIO 相容，文件豐富
 - 反應速度 < 1ms，比機械致動器快
 
-**負面 / 風險：
+**負面 / 風險：**
 - Orin Nano GPIO 輸出 3.3V（非 5V），藍/白 LED 需注意電阻選擇
 - GPIO 庫需在 Jetson 上以 sudo 或特定 group 權限執行
 - 原型使用麵包板，長期可靠性需在 Week 13 壓力測試
