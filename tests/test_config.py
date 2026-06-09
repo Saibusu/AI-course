@@ -3,9 +3,8 @@
 # Datung University — I4210 AI實務專題
 """Unit tests for config constants — validates 5-class system invariants."""
 
-import sys
 import os
-import pytest
+import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from src import config

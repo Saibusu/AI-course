@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Copyright (c) 2026 李軒杰, 黃義鈞
 # Datung University — I4210 AI實務專題
-import threading
-import time
 import logging
+import threading
+
 from src.config import GPIO_PINS, BUZZER_PIN, LED_COLORS, LED_DURATION, BUZZER_DURATION
 
 logger = logging.getLogger(__name__)

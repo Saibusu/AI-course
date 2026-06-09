@@ -3,10 +3,10 @@
 # Datung University — I4210 AI實務專題
 """Unit tests for WasteDetector — uses synthetic mock, no real model required."""
 
-import pytest
-import numpy as np
-import sys
 import os
+import sys
+
+import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 

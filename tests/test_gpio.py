@@ -3,10 +3,11 @@
 # Datung University — I4210 AI實務專題
 """Unit tests for GPIOController — runs in mock mode on any platform."""
 
-import time
-import pytest
-import sys
 import os
+import sys
+import time
+
+import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from src.gpio_controller import GPIOController

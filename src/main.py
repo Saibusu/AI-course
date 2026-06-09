@@ -6,12 +6,11 @@ Smart Touchless Waste Sorter — Main Entry Point
 Usage: python src/main.py [--export-trt]
 """
 
-import sys
-import time
-import logging
 import argparse
+import logging
+import time
+
 import cv2
-import numpy as np
 
 logging.basicConfig(
     level=logging.INFO,
@@ -31,11 +30,11 @@ def parse_args():
 def main():
     args = parse_args()
 
+    from src.camera import open_camera
+    from src.config import CLASS_NAMES, CONF_THRESH, INPUT_SIZE
     from src.detector import WasteDetector
     from src.gpio_controller import GPIOController
-    from src.camera import open_camera
     from src.logger_util import DetectionLogger
-    from src.config import CLASS_NAMES, CONF_THRESH, INPUT_SIZE
 
     detector = WasteDetector()
 
@@ -65,7 +64,7 @@ def main():
 
             if conf < CONF_THRESH:
                 label = f"[FALLBACK] conf={conf:.2f}"
-                class_id = 5
+                class_id = 4
             else:
                 label = f"{CLASS_NAMES[class_id]}  {conf:.2f}"
 

@@ -57,3 +57,6 @@ ignore = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
+
+[tool.ruff.lint.per-file-ignores]
+"live_detect.py" = ["E402", "I001"]

@@ -2,9 +2,10 @@
 # Copyright (c) 2026 李軒杰, 黃義鈞
 # Datung University — I4210 AI實務專題
 import csv
-import os
 import logging
+import os
 from datetime import datetime
+
 from src.config import LOG_FILE, CLASS_NAMES
 
 logger = logging.getLogger(__name__)

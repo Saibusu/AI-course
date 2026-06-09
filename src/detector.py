@@ -2,10 +2,12 @@
 # Copyright (c) 2026 李軒杰, 黃義鈞
 # Datung University — I4210 AI實務專題
 
-import os
 import logging
+import os
+
 import numpy as np
-from src.config import MODEL_ENGINE, MODEL_PT, MODEL_PRETRAIN, INPUT_SIZE, CONF_THRESH, CLASS_NAMES
+
+from src.config import MODEL_ENGINE, MODEL_PT, MODEL_PRETRAIN, INPUT_SIZE, CONF_THRESH
 
 logger = logging.getLogger(__name__)
 

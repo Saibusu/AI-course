@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 # Copyright (c) 2026 李軒杰, 黃義鈞
 # Datung University — I4210 AI實務專題
-import os, time
-import numpy as np
-import cv2
+import os
+import time
 
+import cv2
 import gi
+import numpy as np
+
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
-import tensorrt as trt
+import pycuda.autoinit  # noqa: F401  (side-effect: initialises CUDA context)
 import pycuda.driver as cuda
-import pycuda.autoinit
+import tensorrt as trt
 
 # 5-class system (v5) — 鋁箔包 removed, 塑膠袋 on Pin 21
 CLASS_NAMES  = ['寶特瓶', '鐵鋁罐', '紙餐盒', '塑膠袋', '一般垃圾']
