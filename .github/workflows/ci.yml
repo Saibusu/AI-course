@@ -103,15 +103,17 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
+      - name: Set lowercase image name
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
       - name: Pull latest image
         run: |
-          docker pull ghcr.io/${{ github.repository }}:latest
+          docker pull ${{ env.IMAGE }}:latest
       - name: Run smoke test
         run: |
           docker run --rm \
             --runtime nvidia \
             -v ~/AI-course/models:/app/models:ro \
-            ghcr.io/${{ github.repository }}:latest \
+            ${{ env.IMAGE }}:latest \
             python -c "
           import sys
           sys.path.insert(0, '/app')
@@ -125,5 +127,5 @@ jobs:
         run: |
           docker run --rm \
             --runtime nvidia \
-            ghcr.io/${{ github.repository }}:latest \
+            ${{ env.IMAGE }}:latest \
             pytest tests/ -v --tb=short
