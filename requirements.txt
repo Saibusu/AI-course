@@ -1,18 +1,5 @@
-# Runtime dependencies
-# Note: pycuda and tensorrt are pre-installed via JetPack — do NOT pip install on Jetson
+ultralytics>=8.3.0
 opencv-python-headless>=4.8.0,<4.9.0  # 4.9+ requires numpy>=2, incompatible with Jetson torch
 numpy>=1.24.0,<2.0.0                   # Jetson pre-installed torch requires numpy<2
-pyyaml>=6.0
-
-# Training only (run in Colab/Kaggle, not on Jetson)
-# ultralytics>=8.3.0
-# roboflow>=1.1
-
-# Dev / test
 pytest>=7.4.0
-pytest-cov>=4.1
-ruff>=0.4
-bandit>=1.7
-
-# Jetson GPIO (install separately on Jetson)
-# pip install Jetson.GPIO
+# Jetson.GPIO  # install separately on Jetson: pip install Jetson.GPIO

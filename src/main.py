@@ -1,16 +1,14 @@
-#!/usr/bin/env python3
-# Copyright (c) 2026 李軒杰, 黃義鈞
-# Datung University — I4210 AI實務專題
 """
 Smart Touchless Waste Sorter — Main Entry Point
 Usage: python src/main.py [--export-trt]
 """
 
-import argparse
-import logging
+import sys
 import time
-
+import logging
+import argparse
 import cv2
+import numpy as np
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,11 +28,11 @@ def parse_args():
 def main():
     args = parse_args()
 
-    from src.camera import open_camera
-    from src.config import CLASS_NAMES, CONF_THRESH, INPUT_SIZE
     from src.detector import WasteDetector
     from src.gpio_controller import GPIOController
+    from src.camera import open_camera
     from src.logger_util import DetectionLogger
+    from src.config import CLASS_NAMES, CONF_THRESH, INPUT_SIZE
 
     detector = WasteDetector()
 
@@ -64,7 +62,7 @@ def main():
 
             if conf < CONF_THRESH:
                 label = f"[FALLBACK] conf={conf:.2f}"
-                class_id = 4
+                class_id = 5
             else:
                 label = f"{CLASS_NAMES[class_id]}  {conf:.2f}"
 

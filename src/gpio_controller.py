@@ -1,16 +1,13 @@
-#!/usr/bin/env python3
-# Copyright (c) 2026 李軒杰, 黃義鈞
-# Datung University — I4210 AI實務專題
-import logging
 import threading
-
+import time
+import logging
 from src.config import GPIO_PINS, BUZZER_PIN, LED_COLORS, LED_DURATION, BUZZER_DURATION
 
 logger = logging.getLogger(__name__)
 
 try:
-    import Jetson.GPIO as GPIO  # pragma: no cover
-    _GPIO_AVAILABLE = True      # pragma: no cover
+    import Jetson.GPIO as GPIO
+    _GPIO_AVAILABLE = True
 except Exception:
     _GPIO_AVAILABLE = False
     logger.warning("Jetson.GPIO unavailable — running in mock mode")
@@ -23,7 +20,7 @@ class GPIOController:
         self._timer: threading.Timer | None = None
         self._lock = threading.Lock()
 
-        if not self.mock_mode:  # pragma: no cover
+        if not self.mock_mode:
             try:
                 GPIO.setmode(GPIO.BOARD)
                 for pin in GPIO_PINS.values():
@@ -77,9 +74,9 @@ class GPIOController:
         if self.mock_mode:
             print(f"[MOCK GPIO] Pin {pin} {'HIGH' if state else 'LOW'}")
             return
-        try:  # pragma: no cover
+        try:
             GPIO.output(pin, GPIO.HIGH if state else GPIO.LOW)
-        except Exception as e:  # pragma: no cover
+        except Exception as e:
             logger.error("GPIO output error pin %d: %s", pin, e)
 
     def _beep(self) -> None:
@@ -88,16 +85,16 @@ class GPIOController:
         if self.mock_mode:
             print(f"[MOCK GPIO] Buzzer Pin {BUZZER_PIN} HIGH for {BUZZER_DURATION}s")
             return
-        try:  # pragma: no cover
+        try:
             GPIO.output(BUZZER_PIN, GPIO.HIGH)
             threading.Timer(BUZZER_DURATION, lambda: GPIO.output(BUZZER_PIN, GPIO.LOW)).start()
-        except Exception as e:  # pragma: no cover
+        except Exception as e:
             logger.error("Buzzer error: %s", e)
 
     def cleanup(self) -> None:
         with self._lock:
             self._cancel_active()
-        if not self.mock_mode:  # pragma: no cover
+        if not self.mock_mode:
             try:
                 GPIO.cleanup()
             except Exception as e:

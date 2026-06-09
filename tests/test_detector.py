@@ -1,31 +1,23 @@
-#!/usr/bin/env python3
-# Copyright (c) 2026 李軒杰, 黃義鈞
-# Datung University — I4210 AI實務專題
 """Unit tests for WasteDetector — uses synthetic mock, no real model required."""
 
-import os
-import sys
-
+import pytest
 import numpy as np
+import sys
+import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 
 def _make_boxes(confs, classes):
-    class _NpWrap:
-        def __init__(self, arr):
-            self._arr = arr
-        def cpu(self):
-            return self
-        def numpy(self):
-            return self._arr
+    import torch
 
     class FakeBoxes:
         def __init__(self, c, cl):
-            self.conf = _NpWrap(np.array(c, dtype=np.float32))
-            self.cls  = _NpWrap(np.array(cl, dtype=np.float32))
+            self.conf = torch.tensor(c, dtype=torch.float32)
+            self.cls  = torch.tensor(cl, dtype=torch.float32)
+
         def __len__(self):
-            return len(self.conf._arr)
+            return len(self.conf)
 
     return FakeBoxes(confs, classes)
 
@@ -54,7 +46,7 @@ def test_predict_returns_valid_class_and_conf():
     d = _make_detector_with_model([_make_result([0.85], [0.0])])
     frame = np.zeros((416, 416, 3), dtype=np.uint8)
     class_id, conf = d.predict(frame)
-    assert 0 <= class_id <= 4, f"class_id {class_id} out of 5-class range (0-4)"
+    assert 0 <= class_id <= 5
     assert 0.0 <= conf <= 1.0
 
 
@@ -62,14 +54,14 @@ def test_predict_fallback_on_low_confidence():
     d = _make_detector_with_model([_make_result([0.20], [1.0])])
     frame = np.zeros((416, 416, 3), dtype=np.uint8)
     class_id, conf = d.predict(frame)
-    assert class_id == 4, "Low-confidence should fallback to class 4 (一般垃圾, 5-class system)"
+    assert class_id == 5, "Low-confidence should fallback to class 5 (一般垃圾)"
 
 
 def test_predict_empty_boxes():
     d = _make_detector_with_model([_make_result([], [])])
     frame = np.zeros((416, 416, 3), dtype=np.uint8)
     class_id, conf = d.predict(frame)
-    assert class_id == 4, "Empty boxes should fallback to class 4 (一般垃圾)"
+    assert class_id == 5
     assert conf == 0.0
 
 

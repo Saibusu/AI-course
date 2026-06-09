@@ -1,10 +1,5 @@
-#!/usr/bin/env python3
-# Copyright (c) 2026 李軒杰, 黃義鈞
-# Datung University — I4210 AI實務專題
 import logging
-
 import numpy as np
-
 from src.config import CAMERA_WIDTH, CAMERA_HEIGHT
 
 logger = logging.getLogger(__name__)
@@ -22,11 +17,10 @@ class _GstCapture:
     """cv2.VideoCapture-compatible wrapper backed by GStreamer appsink."""
 
     def __init__(self, w: int, h: int):
-        import time
-
         import gi
         gi.require_version("Gst", "1.0")
         from gi.repository import Gst
+        import time
 
         Gst.init(None)
         pipeline_str = _GST_PIPELINE.format(w=w, h=h)
