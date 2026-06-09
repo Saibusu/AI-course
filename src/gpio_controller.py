@@ -9,8 +9,8 @@ from src.config import GPIO_PINS, BUZZER_PIN, LED_COLORS, LED_DURATION, BUZZER_D
 logger = logging.getLogger(__name__)
 
 try:
-    import Jetson.GPIO as GPIO
-    _GPIO_AVAILABLE = True
+    import Jetson.GPIO as GPIO  # pragma: no cover
+    _GPIO_AVAILABLE = True      # pragma: no cover
 except Exception:
     _GPIO_AVAILABLE = False
     logger.warning("Jetson.GPIO unavailable — running in mock mode")
@@ -23,7 +23,7 @@ class GPIOController:
         self._timer: threading.Timer | None = None
         self._lock = threading.Lock()
 
-        if not self.mock_mode:
+        if not self.mock_mode:  # pragma: no cover
             try:
                 GPIO.setmode(GPIO.BOARD)
                 for pin in GPIO_PINS.values():
@@ -77,9 +77,9 @@ class GPIOController:
         if self.mock_mode:
             print(f"[MOCK GPIO] Pin {pin} {'HIGH' if state else 'LOW'}")
             return
-        try:
+        try:  # pragma: no cover
             GPIO.output(pin, GPIO.HIGH if state else GPIO.LOW)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.error("GPIO output error pin %d: %s", pin, e)
 
     def _beep(self) -> None:
@@ -88,16 +88,16 @@ class GPIOController:
         if self.mock_mode:
             print(f"[MOCK GPIO] Buzzer Pin {BUZZER_PIN} HIGH for {BUZZER_DURATION}s")
             return
-        try:
+        try:  # pragma: no cover
             GPIO.output(BUZZER_PIN, GPIO.HIGH)
             threading.Timer(BUZZER_DURATION, lambda: GPIO.output(BUZZER_PIN, GPIO.LOW)).start()
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.error("Buzzer error: %s", e)
 
     def cleanup(self) -> None:
         with self._lock:
             self._cancel_active()
-        if not self.mock_mode:
+        if not self.mock_mode:  # pragma: no cover
             try:
                 GPIO.cleanup()
             except Exception as e:

@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 def logger(tmp_path, monkeypatch):
     """DetectionLogger writing to a temp file."""
     log_file = str(tmp_path / "detections.csv")
-    monkeypatch.setattr("src.config.LOG_FILE", log_file)
+    monkeypatch.setattr("src.logger_util.LOG_FILE", log_file)
     from src.logger_util import DetectionLogger
     return DetectionLogger()
 
@@ -60,7 +60,7 @@ def test_log_unknown_class(logger, tmp_path):
 
 def test_no_duplicate_header_on_existing_file(tmp_path, monkeypatch):
     log_file = str(tmp_path / "detections.csv")
-    monkeypatch.setattr("src.config.LOG_FILE", log_file)
+    monkeypatch.setattr("src.logger_util.LOG_FILE", log_file)
     from src.logger_util import DetectionLogger
     DetectionLogger()  # creates file + header
     DetectionLogger()  # should NOT write another header

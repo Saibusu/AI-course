@@ -12,15 +12,20 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 
 def _make_boxes(confs, classes):
-    import torch
+    class _NpWrap:
+        def __init__(self, arr):
+            self._arr = arr
+        def cpu(self):
+            return self
+        def numpy(self):
+            return self._arr
 
     class FakeBoxes:
         def __init__(self, c, cl):
-            self.conf = torch.tensor(c, dtype=torch.float32)
-            self.cls  = torch.tensor(cl, dtype=torch.float32)
-
+            self.conf = _NpWrap(np.array(c, dtype=np.float32))
+            self.cls  = _NpWrap(np.array(cl, dtype=np.float32))
         def __len__(self):
-            return len(self.conf)
+            return len(self.conf._arr)
 
     return FakeBoxes(confs, classes)
 

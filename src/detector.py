@@ -17,7 +17,7 @@ class WasteDetector:
         self.model = None
         self._load_model()
 
-    def _load_model(self) -> None:
+    def _load_model(self) -> None:  # pragma: no cover
         from ultralytics import YOLO
 
         if os.path.exists(MODEL_ENGINE):
@@ -61,7 +61,7 @@ class WasteDetector:
 
         return best_class_id, best_conf
 
-    def export_tensorrt(self) -> str:
+    def export_tensorrt(self) -> str:  # pragma: no cover
         """Export best.pt → TensorRT FP16 engine. Run once on Jetson."""
         from ultralytics import YOLO as _YOLO
         if not os.path.exists(MODEL_PT):
