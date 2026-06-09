@@ -96,7 +96,7 @@ jobs:
   # ── Stage 5: Integration Test (self-hosted Jetson runner) ────────────────
   integration-test:
     name: Integration Test (Jetson)
-    runs-on: [self-hosted, jetson]
+    runs-on: [self-hosted, Linux, ARM64]
     needs: build
     if: github.ref == 'refs/heads/main'
     steps:
