@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# Copyright (c) 2026 李軒杰, 黃義鈞
+# Datung University — I4210 AI實務專題
+
 import os
 
 # ── Class definitions (5-class, v5) ──────────────────────
@@ -30,11 +34,11 @@ LED_COLORS = {
 }
 
 # ── Model settings ───────────────────────────────────────
-MODEL_ENGINE  = os.path.join(os.path.dirname(__file__), "..", "models", "waste_sorter_fp16.engine")
+MODEL_ENGINE  = os.path.join(os.path.dirname(__file__), "..", "models", "best_v5.engine")
 MODEL_PT      = os.path.join(os.path.dirname(__file__), "..", "models", "best_v5.pt")
 MODEL_PRETRAIN = "yolo26m.pt"
 INPUT_SIZE   = 416
-CONF_THRESH  = 0.45
+CONF_THRESH  = 0.55
 
 # ── Camera settings ──────────────────────────────────────
 CAMERA_ID    = 0          # CSI camera via GStreamer pipeline index

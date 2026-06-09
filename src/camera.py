@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# Copyright (c) 2026 李軒杰, 黃義鈞
+# Datung University — I4210 AI實務專題
 import logging
 import numpy as np
 from src.config import CAMERA_WIDTH, CAMERA_HEIGHT

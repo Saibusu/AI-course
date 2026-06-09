@@ -1,0 +1,59 @@
+[project]
+name = "waste-sorter"
+version = "0.1.0"
+description = "Smart Touchless Waste Sorting System — Jetson Orin Nano + YOLO26m + TRT FP16"
+authors = [
+    {name = "李軒杰", email = "jaylee8110@gmail.com"},
+    {name = "黃義鈞"},
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "opencv-python-headless>=4.8",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "bandit>=1.7",
+    "pip-audit>=2.7",
+]
+train = [
+    "ultralytics>=8.2",
+    "roboflow>=1.1",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "bandit>=1.7",
+    "pip-audit>=2.7",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=src --cov-report=term-missing --cov-fail-under=90"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["src/__pycache__/*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]

@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# Copyright (c) 2026 李軒杰, 黃義鈞
+# Datung University — I4210 AI實務專題
+
 import os
 import logging
 import numpy as np
@@ -30,7 +34,7 @@ class WasteDetector:
     def predict(self, frame: np.ndarray) -> tuple[int, float]:
         """
         Returns (class_id, confidence).
-        Returns (5, 0.0) as fallback (一般垃圾) when confidence < CONF_THRESH.
+        Returns (4, 0.0) as fallback (一般垃圾, class 4) when confidence < CONF_THRESH.
         """
         results = self.model(
             frame,
@@ -39,7 +43,7 @@ class WasteDetector:
             verbose=False,
         )
 
-        best_class_id = 5    # fallback: 一般垃圾
+        best_class_id = 4    # fallback: 一般垃圾 (5-class system: ID 0-4)
         best_conf = 0.0
 
         for result in results:

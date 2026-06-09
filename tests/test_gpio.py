@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# Copyright (c) 2026 李軒杰, 黃義鈞
+# Datung University — I4210 AI實務專題
 """Unit tests for GPIOController — runs in mock mode on any platform."""
 
 import time
@@ -24,8 +27,9 @@ def test_trigger_valid_class(gpio, capsys):
     assert "HIGH" in out
 
 
-def test_trigger_fallback_class(gpio, capsys):
-    gpio.trigger(5, duration=0.1)
+def test_trigger_general_waste_class(gpio, capsys):
+    # Class 4 = 一般垃圾 → Pin 23 (5-class system, class ID 0-4)
+    gpio.trigger(4, duration=0.1)
     out = capsys.readouterr().out
     assert "Pin 23" in out
 
