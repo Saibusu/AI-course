@@ -22,7 +22,7 @@ COLORS = [
 ]
 
 ENGINE_PATH = os.path.expanduser('~/AI-course/models/best_v5.engine')
-CONF_THRESH = 0.45
+CONF_THRESH = 0.55
 INPUT_SIZE  = 416
 W, H        = 1280, 720
 TRT_LOGGER  = trt.Logger(trt.Logger.WARNING)
