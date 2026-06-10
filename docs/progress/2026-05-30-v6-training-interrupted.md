@@ -1,11 +1,14 @@
-# Training Log — v6 (Interrupted at Epoch 72/80)
+# Training Log — v6 (ABORTED — Kernel crashed on Cancel)
 
 **Date**: 2026-05-30
 **Platform**: Kaggle (GPU T4 x2)
 **Notebook**: `train_kaggle.ipynb`
 **Model base**: `yolo26m.pt`
 **Dataset**: YOLO Waste Detection (ProjectVerba, Roboflow) — 5,460 張，42 類 → 5 類 mapping
-**Output weight**: `best_v6.pt` / `best_v6.onnx`
+**Output weight**: ❌ 未取得（Kernel crash，Cell 7 ONNX 匯出未執行）
+
+> **結果：v6 訓練作廢。** Cancel Run 後 Kaggle Kernel 崩潰，無法執行 Cell 7 匯出 ONNX，
+> `best_v6.pt` 無法下載。**繼續使用 v5（mAP=0.755）作為 production 模型。**
 
 ---
 
@@ -36,34 +39,17 @@
 
 ---
 
-## 停止原因
+## 停止原因與崩潰記錄
 
-使用者手動中斷（Kaggle Cancel Run）。
-mAP 在 epoch 68–71 趨於穩定（0.720–0.722），判斷收斂，
-繼續 8 個 epoch 提升空間有限。
+使用者手動點擊 Cancel Run（epoch 72/80）→ Kaggle Kernel 崩潰，
+Cell 7（ONNX 匯出）無法執行，`best_v6.pt` 及 `best_v6.onnx` 均未成功下載。
 
----
+## 後續動作（若要重跑 v6）
 
-## 後續動作
+重開一個新的 Kaggle session，執行 `train_kaggle.ipynb` Cell 1–7 全部跑完，
+**不要在訓練中途 Cancel**，等訓練完成後直接在同一 session 執行 Cell 7 匯出。
 
-停止後在 Kaggle 執行 Cell 7（Export ONNX）：
-```python
-from ultralytics import YOLO
-model = YOLO('/kaggle/working/best_v6.pt')
-model.export(format='onnx', imgsz=416, simplify=True, opset=12)
-```
-
-然後下載：
-- `/kaggle/working/best_v6.pt`
-- `/kaggle/working/best_v6.onnx`
-
-放入本專案 `models/` 後，在 Jetson 執行：
-```bash
-/usr/src/tensorrt/bin/trtexec \
-  --onnx=models/best_v6.onnx \
-  --saveEngine=models/best_v6.engine \
-  --fp16
-```
+或改用 Colab（`train_colab.ipynb`），Colab 崩潰風險較低，但 GPU 時間有限。
 
 ---
 
